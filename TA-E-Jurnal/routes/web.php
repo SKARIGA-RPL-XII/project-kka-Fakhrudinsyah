@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthController;
 
 // Halaman Login
 Route::get('/', function () {
@@ -20,3 +21,5 @@ Route::get('/jurnal', function () {
 Route::get('/laporan', function () {
     return "<h1 class='p-8 text-center text-2xl'>Halaman Laporan</h1>";
 });
+
+Route::post('/login-check', [AuthController::class, 'loginCheck']);
