@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.3.2">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.3.4">
   <diagram name="Page-1" id="sdDkIAJDPHWhtidWqR-J">
-    <mxGraphModel dx="983" dy="579" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="827" dy="487" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -80,7 +80,7 @@
         <mxCell id="Ozhz-UoYNSrEMlhgS60t-28" edge="1" parent="1" source="Ozhz-UoYNSrEMlhgS60t-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Ozhz-UoYNSrEMlhgS60t-13" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ozhz-UoYNSrEMlhgS60t-10" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="Proses Kelola&lt;div&gt;Akun&lt;/div&gt;" vertex="1">
+        <mxCell id="Ozhz-UoYNSrEMlhgS60t-10" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="Menambahkan,&lt;div&gt;Edit, Hapus Akun&lt;/div&gt;" vertex="1">
           <mxGeometry height="60" width="120" x="330" y="1080" as="geometry" />
         </mxCell>
         <mxCell id="Ozhz-UoYNSrEMlhgS60t-30" edge="1" parent="1" source="Ozhz-UoYNSrEMlhgS60t-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Ozhz-UoYNSrEMlhgS60t-12" value="">
@@ -105,7 +105,7 @@
         <mxCell id="Ozhz-UoYNSrEMlhgS60t-31" edge="1" parent="1" source="Ozhz-UoYNSrEMlhgS60t-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="Ozhz-UoYNSrEMlhgS60t-14" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ozhz-UoYNSrEMlhgS60t-12" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="Proses Kelola&lt;div&gt;Akun&lt;/div&gt;" vertex="1">
+        <mxCell id="Ozhz-UoYNSrEMlhgS60t-12" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="Mengedit Data&lt;div&gt;Diri Siswa&lt;/div&gt;" vertex="1">
           <mxGeometry height="60" width="120" x="320" y="1240" as="geometry" />
         </mxCell>
         <mxCell id="Ozhz-UoYNSrEMlhgS60t-37" edge="1" parent="1" source="Ozhz-UoYNSrEMlhgS60t-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="Ozhz-UoYNSrEMlhgS60t-9" value="">
@@ -146,6 +146,11 @@
               <mxPoint x="10" y="970" />
             </Array>
             <mxPoint x="20" y="960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="EwFx8i5wY_rUdLU2MKXn-1" connectable="0" parent="Ozhz-UoYNSrEMlhgS60t-39" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Tidak" vertex="1">
+          <mxGeometry relative="1" x="-0.8242" y="3" as="geometry">
+            <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Ozhz-UoYNSrEMlhgS60t-17" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" value="Logout" vertex="1">
