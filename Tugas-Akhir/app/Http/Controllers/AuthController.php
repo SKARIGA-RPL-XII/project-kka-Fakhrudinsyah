@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     /**
-     * Tampilkan halaman login
+     * ======================
+     * HALAMAN LOGIN
+     * ======================
      */
     public function index()
     {
@@ -18,60 +20,66 @@ class AuthController extends Controller
     }
 
     /**
-     * Proses login
+     * ======================
+     * PROSES LOGIN
+     * ======================
      */
     public function handleLogin(Request $request)
     {
-        // ✅ VALIDASI LOGIN
+        //  VALIDASI
         $request->validate([
-            'nis' => 'required',
+            'login'    => 'required', // bisa username / nis
             'password' => 'required',
         ]);
 
-        // ✅ CARI USER DI TABEL msuser
-        $user = MsUser::where('nis', $request->nis)->first();
+        //  CARI USER (USERNAME ATAU NIS)
+        $user = MsUser::where('username', $request->login)
+            ->orWhere('nis', $request->login)
+            ->first();
 
-        // ❌ Jika user tidak ada atau password salah
+        //  USER TIDAK ADA / PASSWORD SALAH
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->withErrors([
-                'nis' => 'NIS atau password salah',
-            ])->withInput();
+            return back()
+                ->withErrors(['login' => 'Username / NIS atau password salah'])
+                ->withInput();
         }
 
-        // ✅ LOGIN
+        //  LOGIN
         Auth::login($user);
         $request->session()->regenerate();
 
-        // 🔀 REDIRECT BERDASARKAN ROLE
-        if ($user->role === 'admin') {
-            return redirect()->route('admin.dashboard');
-        }
-
-        if ($user->role === 'pembimbing') {
-            return redirect()->route('pembimbing.dashboard');
-        }
-
-        if ($user->role === 'siswa') {
-            return redirect()->route('siswa.dashboard');
-        }
-
-        // fallback (jaga-jaga)
-        Auth::logout();
-        return redirect()->route('login')
-            ->withErrors(['nis' => 'Role tidak dikenali']);
+        return match ($user->role) {
+            'admin'      => redirect()->route('admin.dashboard'),
+            'pembimbing' => redirect()->route('pembimbing.dashboard'),
+            'siswa'      => redirect()->route('siswa.dashboard'),
+            default      => $this->logoutWithError($request),
+        };
     }
 
     /**
-     * Logout
+     * ======================
+     * LOGOUT
+     * ======================
      */
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect()->route('login')
             ->with('success', 'Berhasil logout');
+    }
+
+    /**
+     * fallback role tidak dikenal
+     */
+    private function logoutWithError(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+
+        return redirect()->route('login')
+            ->withErrors(['login' => 'Role tidak dikenali']);
     }
 }

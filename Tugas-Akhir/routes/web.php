@@ -1,10 +1,16 @@
 <?php
 
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\TempatPklController;
+use App\Http\Controllers\Admin\PembimbingController;
 
+/*
+|--------------------------------------------------------------------------
+| REDIRECT
+|--------------------------------------------------------------------------
+*/
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -20,14 +26,17 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
-| DASHBOARD
+| DASHBOARD PER ROLE
 |--------------------------------------------------------------------------
 */
-Route::get('/pembimbing/dashboard', fn () => view('pembimbing.dashboard'))
-    ->name('pembimbing.dashboard');
+Route::middleware(['auth'])->group(function () {
 
-Route::get('/siswa/dashboard', fn () => view('siswa.dashboard'))
-    ->name('siswa.dashboard');
+    Route::get('/pembimbing/dashboard', fn () => view('pembimbing.dashboard'))
+        ->name('pembimbing.dashboard');
+
+    Route::get('/siswa/dashboard', fn () => view('siswa.dashboard'))
+        ->name('siswa.dashboard');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -39,15 +48,36 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', fn () => view('admin.dashboard'))
         ->name('admin.dashboard');
 
-    // 🔥 AJAX SEARCH (FIXED)
-    Route::get(
-        '/manajemen-user/ajax-search',
-        [UserManagementController::class, 'ajaxSearch']
-    )->name('manajemen_user.ajaxSearch');
+    /*
+    |--------------------------------------------------------------------------
+    | DATA PEMBIMBING (VIEW ONLY + AJAX SEARCH)
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/pembimbing', [PembimbingController::class, 'index'])
+        ->name('pembimbing.index');
 
-    // RESOURCE
-    Route::resource('manajemen-user', UserManagementController::class)
-        ->names('manajemen_user');
+    Route::get('/pembimbing/search', [PembimbingController::class, 'search'])
+        ->name('pembimbing.search');
 
+    /*
+    |--------------------------------------------------------------------------
+    | MANAJEMEN USER
+    |--------------------------------------------------------------------------
+    */
+
+
+    Route::resource(
+        'manajemen-user',
+        UserManagementController::class
+    )->names('manajemen_user');
+
+    /*
+    |--------------------------------------------------------------------------
+    | TEMPAT PKL
+    |--------------------------------------------------------------------------
+    */
+    
+
+    // CRUD TEMPAT PKL
     Route::resource('tempat_pkl', TempatPklController::class);
 });

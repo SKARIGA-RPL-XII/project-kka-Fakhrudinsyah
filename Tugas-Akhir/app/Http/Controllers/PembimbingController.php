@@ -2,64 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pembimbing;
+use App\Models\MsUser;
 use Illuminate\Http\Request;
 
 class PembimbingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index(Request $request)
     {
-        //
-    }
+        $search = $request->search;
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $pembimbing = MsUser::query()
+            ->where('role', 'pembimbing') 
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('nama', 'like', "%{$search}%")
+                      ->orWhere('username', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('nama')
+            ->get();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Pembimbing $pembimbing)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Pembimbing $pembimbing)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Pembimbing $pembimbing)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Pembimbing $pembimbing)
-    {
-        //
+        return view('admin.pembimbing.index', compact('pembimbing', 'search'));
     }
 }

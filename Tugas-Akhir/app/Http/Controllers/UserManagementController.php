@@ -9,130 +9,148 @@ use Illuminate\Support\Facades\Hash;
 
 class UserManagementController extends Controller
 {
-    /**
-     * TAMPIL DATA (HALAMAN UTAMA)
-     */
+    /* =====================================================
+     * MANAJEMEN USER
+     * ===================================================== */
+
     public function index(Request $request)
-    {
-        $search = $request->search;
+{
+    $search = $request->search;
 
-        $users = MsUser::with(['tempatPkl', 'pembimbing'])
-            ->when($search, function ($q) use ($search) {
-                $q->where('nama', 'like', "%{$search}%")
-                  ->orWhere('nis', 'like', "%{$search}%")
-                  ->orWhere('role', 'like', "%{$search}%");
-            })
-            ->orderBy('nama')
-            ->get();
+    $users = MsUser::query()
+        ->when($search, function ($q) use ($search) {
+            $q->where('username', 'like', "%{$search}%")
+              ->orWhere('nis', 'like', "%{$search}%")
+              ->orWhere('role', 'like', "%{$search}%");
+        })
+        ->orderBy('role')
+        ->get();
 
-        // Jika request AJAX, return partial table
-        if ($request->ajax()) {
-            return view('manajemen_user.partials.table', compact('users'));
-        }
-
-        return view('manajemen_user.index', compact('users', 'search'));
+    if ($request->header('X-Requested-With') === 'XMLHttpRequest') {
+        return view('manajemen_user.partials.table', compact('users'));
     }
 
-    /**
-     * FORM TAMBAH USER
-     */
+    return view('manajemen_user.index', compact('users', 'search'));
+}
+
+
     public function create()
     {
-        $tempatPkl  = TempatPkl::all();
-        $pembimbing = MsUser::where('role', 'pembimbing')->get();
+        $pembimbings = MsUser::rolePembimbing()->get();
+        $tempatPkls  = TempatPkl::all();
 
-        return view('manajemen_user.create', compact('tempatPkl', 'pembimbing'));
+        return view('manajemen_user.create', compact('pembimbings', 'tempatPkls'));
     }
 
-    /**
-     * SIMPAN USER
-     */
+    /* =======================
+     * STORE USER
+     * ======================= */
     public function store(Request $request)
     {
         $request->validate([
-            'nama'           => 'required|string',
-            'nis'            => 'required|digits_between:1,10|unique:msuser,nis',
-            'password'       => 'required|min:6',
-            'role'           => 'required|in:admin,pembimbing,siswa',
-            'tempat_pkl_id'  => 'nullable|required_if:role,siswa|exists:tempat_pkl,tempat_pkl_id',
-            'pembimbing_id'  => 'nullable|required_if:role,siswa|exists:msuser,user_id',
+            'role'     => 'required|in:admin,pembimbing,siswa',
+            'nama'     => 'required|string|max:100',
+            'password' => 'required|min:6',
+
+            'username' => 'nullable|required_if:role,admin,pembimbing|unique:msuser,username',
+            'nis'      => 'nullable|required_if:role,siswa|unique:msuser,nis',
         ]);
 
         MsUser::create([
-            'nama'           => $request->nama,
-            'nis'            => $request->nis,
-            'password'       => Hash::make($request->password),
-            'role'           => $request->role,
-            'tempat_pkl_id'  => $request->role === 'siswa' ? $request->tempat_pkl_id : null,
-            'pembimbing_id'  => $request->role === 'siswa' ? $request->pembimbing_id : null,
+            'role'     => $request->role,
+            'nama'     => $request->nama,
+            'username' => in_array($request->role, ['admin', 'pembimbing'])
+                            ? $request->username
+                            : null,
+            'nis'      => $request->role === 'siswa'
+                            ? $request->nis
+                            : null,
+            'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('manajemen_user.index')
+        return redirect()
+            ->route('manajemen_user.index')
             ->with('success', 'User berhasil ditambahkan');
     }
 
-    /**
-     * FORM EDIT USER
-     */
     public function edit(MsUser $manajemen_user)
     {
-        // Cegah edit akun admin
         if ($manajemen_user->role === 'admin') {
-            return redirect()->route('manajemen_user.index')
-                ->with('error', 'Akun admin tidak bisa diedit.');
+            return redirect()
+                ->route('manajemen_user.index')
+                ->with('error', 'User admin tidak dapat diedit');
         }
 
-        $tempatPkl  = TempatPkl::all();
-        $pembimbing = MsUser::where('role', 'pembimbing')->get();
+        $pembimbings = MsUser::rolePembimbing()->get();
+        $tempatPkls  = TempatPkl::all();
 
         return view('manajemen_user.edit', [
-            'user'       => $manajemen_user,
-            'tempatPkl'  => $tempatPkl,
-            'pembimbing' => $pembimbing
+            'user'        => $manajemen_user,
+            'pembimbings' => $pembimbings,
+            'tempatPkls'  => $tempatPkls,
         ]);
     }
 
-    /**
+    /* =======================
      * UPDATE USER
-     */
+     * ======================= */
     public function update(Request $request, MsUser $manajemen_user)
     {
-        // Cegah update akun admin
         if ($manajemen_user->role === 'admin') {
-            return redirect()->route('manajemen_user.index')
-                ->with('error', 'Akun admin tidak bisa diperbarui.');
+            return redirect()
+                ->route('manajemen_user.index')
+                ->with('error', 'User admin tidak dapat diperbarui');
         }
 
-        $request->validate([
-            'nama'           => 'required|string',
-            'role'           => 'required|in:admin,pembimbing,siswa',
-            'tempat_pkl_id'  => 'nullable|required_if:role,siswa|exists:tempat_pkl,tempat_pkl_id',
-            'pembimbing_id'  => 'nullable|required_if:role,siswa|exists:msuser,user_id',
-        ]);
+        // ===== PEMBIMBING =====
+        if ($manajemen_user->role === 'pembimbing') {
+            $request->validate([
+                'nama'     => 'required|string|max:100',
+                'username' => 'required|unique:msuser,username,' . $manajemen_user->user_id . ',user_id',
+                'password' => 'nullable|min:6',
+            ]);
 
-        $manajemen_user->update([
-            'nama'           => $request->nama,
-            'role'           => $request->role,
-            'tempat_pkl_id'  => $request->role === 'siswa' ? $request->tempat_pkl_id : null,
-            'pembimbing_id'  => $request->role === 'siswa' ? $request->pembimbing_id : null,
-        ]);
+            $manajemen_user->nama     = $request->nama;
+            $manajemen_user->username = $request->username;
+        }
 
-        return redirect()->route('manajemen_user.index')
+        // ===== SISWA =====
+        if ($manajemen_user->role === 'siswa') {
+            $request->validate([
+                'nama' => 'required|string|max:100',
+                'nis'  => 'required|unique:msuser,nis,' . $manajemen_user->user_id . ',user_id',
+            ]);
+
+            $manajemen_user->nama = $request->nama;
+            $manajemen_user->nis  = $request->nis;
+
+            $manajemen_user->pembimbing_id = null;
+            $manajemen_user->tempat_pkl_id = null;
+        }
+
+        if ($request->filled('password')) {
+            $manajemen_user->password = Hash::make($request->password);
+        }
+
+        $manajemen_user->save();
+
+        return redirect()
+            ->route('manajemen_user.index')
             ->with('success', 'User berhasil diperbarui');
     }
 
-    /**
-     * HAPUS USER
-     */
     public function destroy(MsUser $manajemen_user)
     {
-        // Cegah hapus akun admin
         if ($manajemen_user->role === 'admin') {
-            return back()->with('error', 'Akun admin tidak bisa dihapus.');
+            return redirect()
+                ->route('manajemen_user.index')
+                ->with('error', 'User admin tidak dapat dihapus');
         }
 
         $manajemen_user->delete();
 
-        return back()->with('success', 'User berhasil dihapus');
+        return redirect()
+            ->route('manajemen_user.index')
+            ->with('success', 'User berhasil dihapus');
     }
 }

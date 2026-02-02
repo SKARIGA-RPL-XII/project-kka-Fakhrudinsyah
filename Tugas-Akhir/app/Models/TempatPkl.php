@@ -11,9 +11,9 @@ class TempatPkl extends Model
     use HasFactory;
 
     protected $table = 'tempat_pkl';
-    protected $primaryKey = 'tempat_pkl_id'; // 🔥 WAJIB
-    public $incrementing = true;              // 🔥 TAMBAH
-    protected $keyType = 'int';               // 🔥 TAMBAH
+    protected $primaryKey = 'tempat_pkl_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
     public $timestamps = true;
 
     protected $fillable = [
@@ -21,9 +21,15 @@ class TempatPkl extends Model
         'alamat',
     ];
 
+    /**
+     * RELASI: Tempat PKL punya banyak siswa
+     */
     public function siswa()
     {
-        return $this->hasMany(MsUser::class, 'tempat_pkl_id', 'tempat_pkl_id')
-            ->where('role', 'siswa');
+        return $this->hasMany(
+            MsUser::class,
+            'tempat_pkl_id',   
+            'tempat_pkl_id'    
+        )->where('role', 'siswa');
     }
 }

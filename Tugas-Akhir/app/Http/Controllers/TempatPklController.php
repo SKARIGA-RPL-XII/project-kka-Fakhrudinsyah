@@ -7,9 +7,7 @@ use Illuminate\Http\Request;
 
 class TempatPklController extends Controller
 {
-    /**
-     * TAMPIL DATA + SEARCH + JUMLAH SISWA
-     */
+
     public function index(Request $request)
     {
         $search = $request->search;
@@ -28,7 +26,18 @@ class TempatPklController extends Controller
             ->orderBy('nama_tempat')
             ->get();
 
-        return view('admin.tempat_pkl.index', compact('tempat', 'search'));
+
+        if ($request->ajax()) {
+            return view(
+                'admin.tempat_pkl.partials.table',
+                compact('tempat')
+            )->render();
+        }
+
+        return view(
+            'admin.tempat_pkl.index',
+            compact('tempat', 'search')
+        );
     }
 
     /**
@@ -54,7 +63,8 @@ class TempatPklController extends Controller
             'alamat'      => $request->alamat,
         ]);
 
-        return redirect()->route('tempat_pkl.index')
+        return redirect()
+            ->route('tempat_pkl.index')
             ->with('success', 'Data Tempat PKL berhasil ditambahkan.');
     }
 
@@ -63,7 +73,10 @@ class TempatPklController extends Controller
      */
     public function edit(TempatPkl $tempat_pkl)
     {
-        return view('admin.tempat_pkl.edit', compact('tempat_pkl'));
+        return view(
+            'admin.tempat_pkl.edit',
+            compact('tempat_pkl')
+        );
     }
 
     /**
@@ -81,7 +94,8 @@ class TempatPklController extends Controller
             'alamat'      => $request->alamat,
         ]);
 
-        return redirect()->route('tempat_pkl.index')
+        return redirect()
+            ->route('tempat_pkl.index')
             ->with('success', 'Data Tempat PKL berhasil diperbarui.');
     }
 
@@ -92,7 +106,8 @@ class TempatPklController extends Controller
     {
         $tempat_pkl->delete();
 
-        return redirect()->route('tempat_pkl.index')
+        return redirect()
+            ->route('tempat_pkl.index')
             ->with('success', 'Data Tempat PKL berhasil dihapus.');
     }
 }
