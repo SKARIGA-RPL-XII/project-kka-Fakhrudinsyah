@@ -95,7 +95,7 @@
     const emptyData = document.getElementById('empty-data');
 
     searchInput.addEventListener('keyup', function () {
-        fetch(`{{ route('pembimbing.search') }}?search=${this.value}`)
+        fetch(`{{ route('admin.pembimbing.search') }}?search=${this.value}`)
             .then(res => res.json())
             .then(data => {
                 tableBody.innerHTML = '';

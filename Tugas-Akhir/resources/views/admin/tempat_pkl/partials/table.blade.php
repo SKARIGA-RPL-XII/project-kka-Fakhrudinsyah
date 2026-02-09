@@ -14,15 +14,17 @@
                 <td class="px-6 py-4">{{ $item->nama_tempat }}</td>
                 <td class="px-6 py-4">{{ $item->alamat }}</td>
                 <td class="px-6 py-4 text-center">
+                    <span class="px-3 py-1 text-sm rounded-full bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 font-semibold">
                     {{ $item->siswa->count() }} siswa
+                    </span>
                 </td>
                 <td class="px-6 py-4 text-center flex gap-2 justify-center">
-                    <a href="{{ route('tempat_pkl.edit', $item->tempat_pkl_id) }}"
+                    <a href="{{ route('admin.tempat_pkl.edit', $item->tempat_pkl_id) }}"
                        class="bg-yellow-400 text-white px-4 py-2 rounded">
                         Edit
                     </a>
 
-                    <form action="{{ route('tempat_pkl.destroy', $item->tempat_pkl_id) }}"
+                    <form action="{{ route('admin.tempat_pkl.destroy', $item->tempat_pkl_id) }}"
                           method="POST">
                         @csrf
                         @method('DELETE')

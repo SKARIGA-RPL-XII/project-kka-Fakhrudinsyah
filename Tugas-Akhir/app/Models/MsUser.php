@@ -148,4 +148,13 @@ class MsUser extends Authenticatable
 
         return true;
     }
-}
+
+    public function pembimbing()
+    {
+        return $this->belongsTo(
+            MsUser::class,
+            'pembimbing_id',
+            'user_id'
+        );
+    }
+    }

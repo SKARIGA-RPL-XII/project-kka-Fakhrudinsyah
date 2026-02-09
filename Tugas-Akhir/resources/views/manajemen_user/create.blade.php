@@ -10,7 +10,7 @@
         <h1 class="text-2xl font-bold mb-6">Tambah User</h1>
 
         <div class="bg-white p-6 rounded shadow">
-            <form action="{{ route('manajemen_user.store') }}" method="POST" class="space-y-5">
+            <form action="{{ route('admin.manajemen_user.store') }}" method="POST" class="space-y-5">
                 @csrf
 
                 {{-- ROLE --}}
@@ -64,7 +64,7 @@
                     <button class="bg-blue-600 text-white px-6 py-2 rounded">
                         Simpan
                     </button>
-                    <a href="{{ route('manajemen_user.index') }}"
+                    <a href="{{ route('admin.manajemen_user.index') }}"
                         class="bg-gray-500 text-white px-6 py-2 rounded">
                         Kembali
                     </a>

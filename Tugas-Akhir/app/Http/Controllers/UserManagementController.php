@@ -153,4 +153,28 @@ class UserManagementController extends Controller
             ->route('manajemen_user.index')
             ->with('success', 'User berhasil dihapus');
     }
+
+    public function dataSiswa(Request $request)
+{
+    $search = $request->search;
+
+    $siswas = MsUser::with('pembimbing')
+        ->where('role', 'siswa')
+        ->when($search, function ($q) use ($search) {
+            $q->where('nama', 'like', "%{$search}%")
+              ->orWhere('nis', 'like', "%{$search}%");
+        })
+        ->orderBy('nama')
+        ->get();
+
+  
+    if ($request->ajax()) {
+        return view('admin.data_siswa.partials.table', compact('siswas'));
+    }
+
+  
+    return view('admin.data_siswa.index', compact('siswas', 'search'));
 }
+
+    }
+

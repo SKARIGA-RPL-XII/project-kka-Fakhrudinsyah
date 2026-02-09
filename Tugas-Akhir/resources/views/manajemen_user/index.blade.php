@@ -27,7 +27,7 @@
                     <i class="fas fa-users text-blue-500 mr-3"></i> Manajemen User
                 </h1>
 
-                <a href="{{ route('manajemen_user.create') }}"
+                <a href="{{ route('admin.manajemen_user.create') }}"
                    class="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-3 rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-800 hover:scale-105 transition-all duration-300 inline-flex items-center">
                     <i class="fas fa-plus mr-2"></i> Tambah User
                 </a>
@@ -95,7 +95,7 @@ searchInput.addEventListener('input', function () {
     clearTimeout(timer);
 
     timer = setTimeout(() => {
-        fetch(`{{ route('manajemen_user.index') }}?search=${this.value}`, {
+        fetch(`{{ route('admin.manajemen_user.index') }}?search=${this.value}`, {
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }

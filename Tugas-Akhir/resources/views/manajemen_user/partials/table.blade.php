@@ -36,12 +36,12 @@
     {{-- Aksi --}}
     <td class="px-6 py-4 flex gap-2 justify-center">
         @if($user->role !== 'admin')
-            <a href="{{ route('manajemen_user.edit', $user->user_id) }}"
+            <a href="{{ route('admin.manajemen_user.edit', $user->user_id) }}"
                class="bg-yellow-400 text-white px-4 py-2 rounded-lg hover:bg-yellow-500 shadow flex items-center">
                 <i class="fas fa-edit mr-1"></i> Edit
             </a>
 
-            <form action="{{ route('manajemen_user.destroy', $user->user_id) }}"
+            <form action="{{ route('admin.manajemen_user.destroy', $user->user_id) }}"
                   method="POST"
                   onsubmit="return confirm('Yakin hapus user ini?')">
                 @csrf

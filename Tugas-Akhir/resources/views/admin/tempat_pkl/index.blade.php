@@ -22,7 +22,7 @@
                 Data Tempat PKL
             </h1>
 
-            <a href="{{ route('tempat_pkl.create') }}"
+            <a href="{{ route('admin.tempat_pkl.create') }}"
                class="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-3 rounded-lg shadow">
                 <i class="fas fa-plus mr-2"></i> Tambah Tempat PKL
             </a>
@@ -62,7 +62,7 @@ document.getElementById('searchInput').addEventListener('input', function () {
     const keyword = this.value;
 
     timer = setTimeout(() => {
-        fetch(`{{ route('tempat_pkl.index') }}?search=${keyword}`, {
+        fetch(`{{ route('admin.tempat_pkl.index') }}?search=${keyword}`, {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
         .then(res => res.text())

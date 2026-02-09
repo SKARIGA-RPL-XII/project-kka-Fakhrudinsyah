@@ -14,26 +14,27 @@
             Dashboard
         </a>
 
-        <a href="#"
-           class="flex items-center px-5 py-3 hover:bg-gradient-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-300 rounded-lg mx-2 mb-1">
-            <i class="fas fa-users mr-3"></i>
-            Data Siswa
-        </a>
+        <a href="{{ route('admin.data_siswa.index') }}"
+   class="flex items-center px-5 py-3 hover:bg-gradient-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-300 rounded-lg mx-2 mb-1">
+    <i class="fas fa-users mr-3"></i>
+    Data Siswa
+    </a>
 
-        {{-- ✅ DATA PEMBIMBING --}}
-        <a href="{{ route('pembimbing.index') }}"
+
+        
+        <a href="{{ route('admin.pembimbing.index') }}"
            class="flex items-center px-5 py-3 hover:bg-gradient-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-300 rounded-lg mx-2 mb-1">
             <i class="fas fa-user-tie mr-3"></i>
             Data Pembimbing
         </a>
 
-        <a href="{{ route('tempat_pkl.index') }}"
+        <a href="{{ route('admin.tempat_pkl.index') }}"
            class="flex items-center px-5 py-3 hover:bg-gradient-to-r hover:from-gray-700 hover:to-gray-600 transition-all duration-300 rounded-lg mx-2 mb-1">
             <i class="fas fa-briefcase mr-3"></i>
             Data Tempat PKL
         </a>
 
-        <a href="{{ route('manajemen_user.index') }}"
+        <a href="{{ route('admin.manajemen_user.index') }}"
            class="flex items-center px-5 py-3 hover:bg-gray-700 rounded-lg mx-2">
             <i class="fas fa-user-cog mr-3"></i>
             Manajemen User

@@ -38,7 +38,7 @@
         @endif
 
         <div class="bg-white rounded-xl shadow-xl p-8">
-            <form action="{{ route('tempat_pkl.update', $tempat_pkl->tempat_pkl_id) }}" method="POST" class="space-y-6">
+            <form action="{{ route('admin.tempat_pkl.update', $tempat_pkl->tempat_pkl_id) }}" method="POST" class="space-y-6">
                 @csrf
                 @method('PUT')
 
@@ -62,7 +62,7 @@
                     <button class="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-300 shadow-lg hover:scale-105 flex items-center">
                         <i class="fas fa-save mr-2"></i> Update
                     </button>
-                    <a href="{{ route('tempat_pkl.index') }}"
+                    <a href="{{ route('admin.tempat_pkl.index') }}"
                        class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-3 rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all duration-300 shadow-lg hover:scale-105 flex items-center">
                         <i class="fas fa-arrow-left mr-2"></i> Kembali
                     </a>

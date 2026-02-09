@@ -5,10 +5,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\TempatPklController;
 use App\Http\Controllers\Admin\PembimbingController;
+use App\Http\Controllers\DataSiswaController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\JurnalController;
+use App\Http\Controllers\LaporanController;
 
 /*
 |--------------------------------------------------------------------------
-| REDIRECT
+| REDIRECT DEFAULT
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
@@ -17,7 +21,7 @@ Route::get('/', function () {
 
 /*
 |--------------------------------------------------------------------------
-| AUTH
+| AUTH (LOGIN & LOGOUT)
 |--------------------------------------------------------------------------
 */
 Route::get('/login', [AuthController::class, 'index'])->name('login');
@@ -26,16 +30,67 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
-| DASHBOARD PER ROLE
+| SISWA
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->prefix('siswa')->name('siswa.')->group(function () {
 
-    Route::get('/pembimbing/dashboard', fn () => view('pembimbing.dashboard'))
-        ->name('pembimbing.dashboard');
+    // Dashboard Siswa
+    Route::get('/dashboard', fn () => view('siswa.dashboard'))
+        ->name('dashboard');
 
-    Route::get('/siswa/dashboard', fn () => view('siswa.dashboard'))
-        ->name('siswa.dashboard');
+    // =======================
+    // JURNAL SISWA
+    // =======================
+
+    // Halaman jurnal harian
+    Route::get('/jurnal', [JurnalController::class, 'index'])
+        ->name('jurnal.index');
+
+    // Simpan jurnal
+    Route::post('/jurnal', [JurnalController::class, 'store'])
+        ->name('jurnal.store');
+
+    // Riwayat jurnal (7 hari)
+    Route::get('/jurnal/history', [JurnalController::class, 'history'])
+        ->name('jurnal.history');
+
+    // =======================
+    // EDIT JURNAL (HANYA STATUS MENUNGGU)
+    // =======================
+
+    Route::get('/jurnal/{id}/edit', [JurnalController::class, 'edit'])
+        ->name('jurnal.edit');
+
+    Route::put('/jurnal/{id}', [JurnalController::class, 'update'])
+        ->name('jurnal.update');
+
+    // =======================
+// LAPORAN SISWA
+// =======================
+Route::get('/laporan', [LaporanController::class, 'index'])
+    ->name('laporan.index');
+
+Route::post('/laporan', [LaporanController::class, 'store'])
+    ->name('laporan.store');
+    
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| PEMBIMBING
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->prefix('pembimbing')->name('pembimbing.')->group(function () {
+
+    // Dashboard Pembimbing
+    Route::get('/dashboard', fn () => view('pembimbing.dashboard'))
+        ->name('dashboard');
+
+    // (NANTI)
+    // - Review jurnal siswa
+    // - Approve / revisi jurnal
 });
 
 /*
@@ -43,15 +98,20 @@ Route::middleware(['auth'])->group(function () {
 | ADMIN
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->prefix('admin')->group(function () {
-
-    Route::get('/dashboard', fn () => view('admin.dashboard'))
-        ->name('admin.dashboard');
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
 
     /*
-    |--------------------------------------------------------------------------
-    | DATA PEMBIMBING (VIEW ONLY + AJAX SEARCH)
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
+    | DASHBOARD ADMIN
+    |----------------------------------------------------------------------
+    */
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+        ->name('dashboard');
+
+    /*
+    |----------------------------------------------------------------------
+    | DATA PEMBIMBING
+    |----------------------------------------------------------------------
     */
     Route::get('/pembimbing', [PembimbingController::class, 'index'])
         ->name('pembimbing.index');
@@ -60,24 +120,34 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         ->name('pembimbing.search');
 
     /*
-    |--------------------------------------------------------------------------
-    | MANAJEMEN USER
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
+    | DATA SISWA
+    |----------------------------------------------------------------------
     */
+    Route::get('/data-siswa', [DataSiswaController::class, 'index'])
+        ->name('data_siswa.index');
 
+    Route::get('/data-siswa/search', [DataSiswaController::class, 'ajaxSearch'])
+        ->name('data_siswa.search');
 
-    Route::resource(
-        'manajemen-user',
-        UserManagementController::class
-    )->names('manajemen_user');
+    Route::get('/data-siswa/{id}/edit', [DataSiswaController::class, 'edit'])
+        ->name('data_siswa.edit');
+
+    Route::put('/data-siswa/{id}', [DataSiswaController::class, 'update'])
+        ->name('data_siswa.update');
 
     /*
-    |--------------------------------------------------------------------------
-    | TEMPAT PKL
-    |--------------------------------------------------------------------------
+    |----------------------------------------------------------------------
+    | MANAJEMEN USER
+    |----------------------------------------------------------------------
     */
-    
+    Route::resource('manajemen-user', UserManagementController::class)
+        ->names('manajemen_user');
 
-    // CRUD TEMPAT PKL
+    /*
+    |----------------------------------------------------------------------
+    | TEMPAT PKL
+    |----------------------------------------------------------------------
+    */
     Route::resource('tempat_pkl', TempatPklController::class);
 });

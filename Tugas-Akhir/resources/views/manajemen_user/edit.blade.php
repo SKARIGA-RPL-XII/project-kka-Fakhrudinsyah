@@ -49,14 +49,14 @@
                 <div class="bg-yellow-100 text-yellow-700 p-4 rounded-lg mb-6 border-l-4 border-yellow-500 flex items-center">
                     <i class="fas fa-exclamation-triangle text-yellow-500 mr-3"></i> User dengan role Admin tidak dapat diedit.
                 </div>
-                <a href="{{ route('manajemen_user.index') }}"
+                <a href="{{ route('admin.manajemen_user.index') }}"
                    class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-3 rounded-lg shadow-lg hover:from-gray-600 hover:to-gray-700 hover:scale-105 transition-all duration-300 flex items-center">
                     <i class="fas fa-arrow-left mr-2"></i> Kembali
                 </a>
             @else
                 {{-- Form Edit --}}
                 <div class="bg-white p-8 rounded-xl shadow-xl">
-                    <form action="{{ route('manajemen_user.update', $user) }}" method="POST" class="grid grid-cols-1 gap-6">
+                    <form action="{{ route('admin.manajemen_user.update', $user) }}" method="POST" class="grid grid-cols-1 gap-6">
                         @csrf
                         @method('PUT')
 
