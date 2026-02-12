@@ -130,7 +130,7 @@
                                     class="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-3 rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-800 hover:scale-105 transition-all duration-300 flex items-center">
                                 <i class="fas fa-save mr-2"></i> Update
                             </button>
-                            <a href="{{ route('manajemen_user.index') }}"
+                            <a href="{{ route('admin.manajemen_user.index') }}"
                                class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-6 py-3 rounded-lg shadow-lg hover:from-gray-600 hover:to-gray-700 hover:scale-105 transition-all duration-300 flex items-center">
                                 <i class="fas fa-arrow-left mr-2"></i> Kembali
                             </a>

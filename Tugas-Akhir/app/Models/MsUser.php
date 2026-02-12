@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Models\TempatPkl;
 
 class MsUser extends Authenticatable
 {
@@ -27,9 +26,9 @@ class MsUser extends Authenticatable
     ];
 
     /*
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     | HELPER ROLE
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     */
     public function isAdmin(): bool
     {
@@ -47,9 +46,9 @@ class MsUser extends Authenticatable
     }
 
     /*
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     | IDENTIFIER LOGIN
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     */
     public function getLoginIdentifierAttribute(): string
     {
@@ -59,9 +58,9 @@ class MsUser extends Authenticatable
     }
 
     /*
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     | NAMA TAMPILAN
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     */
     public function getDisplayNameAttribute(): string
     {
@@ -74,9 +73,19 @@ class MsUser extends Authenticatable
     }
 
     /*
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    | ACCESSOR NAMA PEMBIMBING
+    |--------------------------------------------------------------------------
+    */
+    public function getNamaPembimbingAttribute()
+    {
+        return $this->pembimbing ? $this->pembimbing->nama : '-';
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | QUERY SCOPE ROLE
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     */
     public function scopeRoleAdmin($query)
     {
@@ -94,9 +103,9 @@ class MsUser extends Authenticatable
     }
 
     /*
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     | RELASI TEMPAT PKL
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     */
     public function tempatPkl()
     {
@@ -108,11 +117,11 @@ class MsUser extends Authenticatable
     }
 
     /*
-    |------------------------------------------------------------------
-    | RELASI PEMBIMBING (RENAMED)
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    | RELASI PEMBIMBING (SISWA -> PEMBIMBING)
+    |--------------------------------------------------------------------------
     */
-    public function pembimbingUser()
+    public function pembimbing()
     {
         return $this->belongsTo(
             MsUser::class,
@@ -122,9 +131,9 @@ class MsUser extends Authenticatable
     }
 
     /*
-    |------------------------------------------------------------------
-    | RELASI SISWA BIMBINGAN
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    | RELASI SISWA BIMBINGAN (PEMBIMBING -> SISWA)
+    |--------------------------------------------------------------------------
     */
     public function siswaBimbingan()
     {
@@ -136,9 +145,59 @@ class MsUser extends Authenticatable
     }
 
     /*
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
+    | RELASI CHAT / BIMBINGAN
+    |--------------------------------------------------------------------------
+    */
+
+    // Semua pesan milik siswa (dipakai di halaman pembimbing)
+    public function bimbinganMessages()
+    {
+        return $this->hasMany(
+            \App\Models\BimbinganMessage::class,
+            'siswa_id',
+            'user_id'
+        );
+    }
+
+    // Pesan yang dikirim siswa
+    public function pesanSiswa()
+    {
+        return $this->hasMany(
+            \App\Models\BimbinganMessage::class,
+            'siswa_id',
+            'user_id'
+        );
+    }
+
+    // Pesan yang dikirim pembimbing
+    public function pesanPembimbing()
+    {
+        return $this->hasMany(
+            \App\Models\BimbinganMessage::class,
+            'pembimbing_id',
+            'user_id'
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHAT BELUM DIBACA (UNTUK TITIK MERAH)
+    |--------------------------------------------------------------------------
+    */
+    public function chatBelumDibaca()
+    {
+        return $this->hasMany(
+            \App\Models\BimbinganMessage::class,
+            'siswa_id',
+            'user_id'
+        )->where('dibaca', false);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | KEAMANAN HAPUS PEMBIMBING
-    |------------------------------------------------------------------
+    |--------------------------------------------------------------------------
     */
     public function canBeDeleted(): bool
     {
@@ -148,13 +207,4 @@ class MsUser extends Authenticatable
 
         return true;
     }
-
-    public function pembimbing()
-    {
-        return $this->belongsTo(
-            MsUser::class,
-            'pembimbing_id',
-            'user_id'
-        );
-    }
-    }
+}

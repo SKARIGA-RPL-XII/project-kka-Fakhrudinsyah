@@ -95,7 +95,7 @@ class TempatPklController extends Controller
         ]);
 
         return redirect()
-            ->route('tempat_pkl.index')
+            ->route('admin.tempat_pkl.index')
             ->with('success', 'Data Tempat PKL berhasil diperbarui.');
     }
 
@@ -107,7 +107,7 @@ class TempatPklController extends Controller
         $tempat_pkl->delete();
 
         return redirect()
-            ->route('tempat_pkl.index')
+            ->route('admin.tempat_pkl.index')
             ->with('success', 'Data Tempat PKL berhasil dihapus.');
     }
 }

@@ -135,7 +135,7 @@ class UserManagementController extends Controller
         $manajemen_user->save();
 
         return redirect()
-            ->route('manajemen_user.index')
+            ->route('admin.manajemen_user.index')
             ->with('success', 'User berhasil diperbarui');
     }
 
@@ -143,14 +143,14 @@ class UserManagementController extends Controller
     {
         if ($manajemen_user->role === 'admin') {
             return redirect()
-                ->route('manajemen_user.index')
+                ->route('admin.manajemen_user.index')
                 ->with('error', 'User admin tidak dapat dihapus');
         }
 
         $manajemen_user->delete();
 
         return redirect()
-            ->route('manajemen_user.index')
+            ->route('admin.manajemen_user.index')
             ->with('success', 'User berhasil dihapus');
     }
 

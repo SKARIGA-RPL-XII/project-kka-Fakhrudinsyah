@@ -15,7 +15,7 @@ class DataSiswaController extends Controller
      */
     public function index()
     {
-        $siswa = MsUser::with(['pembimbingUser', 'tempatPkl'])
+        $siswa = MsUser::with(['pembimbing', 'tempatPkl'])
             ->roleSiswa()
             ->get();
 
@@ -31,7 +31,7 @@ class DataSiswaController extends Controller
     {
         $keyword = $request->keyword;
 
-        $siswa = MsUser::with(['pembimbingUser', 'tempatPkl'])
+        $siswa = MsUser::with(['pembimbing', 'tempatPkl'])
             ->roleSiswa()
             ->where(function ($q) use ($keyword) {
                 $q->where('nama', 'like', "%{$keyword}%")
@@ -49,7 +49,7 @@ class DataSiswaController extends Controller
      */
     public function edit($id)
     {
-        $siswa = MsUser::with(['pembimbingUser', 'tempatPkl'])
+        $siswa = MsUser::with(['pembimbing', 'tempatPkl'])
             ->roleSiswa()
             ->findOrFail($id);
 
@@ -83,7 +83,7 @@ class DataSiswaController extends Controller
         ]);
 
         return redirect()
-            ->route('data_siswa.index')
+            ->route('admin.data_siswa.index')
             ->with('success', 'Data siswa berhasil diperbarui');
     }
 }
