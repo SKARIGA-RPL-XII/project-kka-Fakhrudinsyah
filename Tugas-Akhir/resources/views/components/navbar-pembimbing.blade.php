@@ -24,7 +24,7 @@
 
                 <a href="{{ route('pembimbing.jurnal.index') }}"
                    class="hover:text-yellow-300 transition">
-                    <i class="fas fa-users mr-1"></i> Data Siswa
+                    <i class="fas fa-users mr-1"></i> Jurnal Siswa
                 </a>
             </div>
 

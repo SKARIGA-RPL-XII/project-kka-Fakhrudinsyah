@@ -86,13 +86,14 @@ class BimbinganController extends Controller
                 ->store('bimbingan', 'public');
         }
 
-        BimbinganMessage::create([
-            'siswa_id'      => $siswaId,
-            'pembimbing_id' => Auth::id(),
-            'pesan'         => $request->pesan,
-            'file'          => $filePath,
-            'dibaca'        => 0,
-        ]);
+       BimbinganMessage::create([
+    'siswa_id'      => $siswaId,
+    'pembimbing_id' => Auth::id(),
+    'pengirim'      => 'pembimbing',   // tambah ini
+    'pesan'         => $request->pesan,
+    'file'          => $filePath,
+    'dibaca'        => 0,
+]);
 
         return redirect()->back();
     }

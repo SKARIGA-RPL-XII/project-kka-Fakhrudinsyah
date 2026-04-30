@@ -1,6 +1,7 @@
 <table class="w-full">
     <thead class="bg-gradient-to-r from-gray-800 to-gray-700 text-white">
         <tr>
+            <th class="px-6 py-4 text-left">Nomor</th>
             <th class="px-6 py-4 text-left">Nama Tempat</th>
             <th class="px-6 py-4 text-left">Alamat</th>
             <th class="px-6 py-4 text-center">Jumlah Siswa</th>
@@ -11,6 +12,9 @@
     <tbody class="divide-y">
         @forelse ($tempat as $item)
             <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 text-center text-gray-600 font-medium">
+        {{ $loop->iteration }}
+        </td>
                 <td class="px-6 py-4">{{ $item->nama_tempat }}</td>
                 <td class="px-6 py-4">{{ $item->alamat }}</td>
                 <td class="px-6 py-4 text-center">

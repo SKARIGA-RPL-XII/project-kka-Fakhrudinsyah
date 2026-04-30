@@ -24,11 +24,19 @@
                     <h3 class="font-semibold text-lg text-gray-800">
                         {{ $jurnal->judul }}
                     </h3>
+
                     <p class="text-sm text-gray-500">
                         Siswa: {{ $jurnal->siswa->nama }}
                     </p>
+
+                    {{-- TANGGAL KEGIATAN --}}
                     <p class="text-sm text-gray-500">
                         Tanggal: {{ \Carbon\Carbon::parse($jurnal->tanggal)->format('d M Y') }}
+                    </p>
+
+                    {{-- JAM KIRIM --}}
+                    <p class="text-sm text-gray-500">
+                        Dikirim: {{ $jurnal->created_at->format('d M Y H:i') }}
                     </p>
                 </div>
 

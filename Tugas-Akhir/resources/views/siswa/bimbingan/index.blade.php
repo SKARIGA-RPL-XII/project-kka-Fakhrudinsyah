@@ -12,40 +12,55 @@
                 Bimbingan dengan Pembimbing
             </h1>
 
-            {{-- CHAT BOX --}}
-            <div id="chat-box" class="bg-white shadow-2xl rounded-3xl p-6 h-[500px] overflow-y-auto mb-6 space-y-4 border border-gray-200">
+{{-- CHAT BOX --}}
+<div id="chat-box" class="bg-white shadow-2xl rounded-3xl p-6 h-[500px] overflow-y-auto mb-6 space-y-4 border border-gray-200">
 
-                @forelse($messages as $msg)
-                    <div class="flex {{ $msg->siswa_id == auth()->id() ? 'justify-end' : 'justify-start' }}">
-                        <div class="max-w-md px-4 py-3 rounded-2xl shadow-sm
-                            {{ $msg->siswa_id == auth()->id()
-                                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white'
-                                : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800' }}">
-                            
-                            @if($msg->pesan)
-                                <p class="text-sm leading-relaxed">{{ $msg->pesan }}</p>
-                            @endif
+    @forelse($messages as $msg)
 
-                            @if($msg->file)
-                                <a href="{{ asset('storage/'.$msg->file) }}"
-                                   class="block mt-2 underline text-sm hover:text-blue-300 transition duration-200"
-                                   target="_blank">
-                                    <i class="fas fa-paperclip mr-1"></i> Lihat File
-                                </a>
-                            @endif
+        @php
+            // Pesan dari siswa = kanan, dari pembimbing = kiri
+            $dariSiswa = isset($msg->pengirim)
+                ? $msg->pengirim === 'siswa'
+                : is_null($msg->pembimbing_id); // fallback jika kolom pengirim belum ada
+        @endphp
 
-                            <span class="block text-xs opacity-70 mt-2">
-                                {{ $msg->created_at->format('d M Y H:i') }}
-                            </span>
-                        </div>
-                    </div>
-                @empty
-                    <div class="text-center text-gray-500 py-10">
-                        <i class="fas fa-comments text-4xl mb-4 text-gray-300"></i>
-                        <p>Belum ada percakapan. Mulai bimbingan dengan mengirim pesan!</p>
-                    </div>
-                @endforelse
+        <div class="flex {{ $dariSiswa ? 'justify-end' : 'justify-start' }}">
+            <div class="max-w-md px-4 py-3 rounded-2xl shadow-sm
+                {{ $dariSiswa
+                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-tr-sm'
+                    : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 rounded-tl-sm' }}">
+
+                {{-- Label nama pengirim --}}
+                <p class="text-xs font-semibold mb-1 opacity-70">
+                    {{ $dariSiswa ? 'Kamu' : 'Pembimbing' }}
+                </p>
+
+                @if($msg->pesan)
+                    <p class="text-sm leading-relaxed">{{ $msg->pesan }}</p>
+                @endif
+
+                @if($msg->file)
+                    <a href="{{ asset('storage/'.$msg->file) }}"
+                       class="block mt-2 underline text-sm hover:opacity-80 transition duration-200"
+                       target="_blank">
+                        <i class="fas fa-paperclip mr-1"></i> Lihat File
+                    </a>
+                @endif
+
+                <span class="block text-xs opacity-70 mt-2 {{ $dariSiswa ? 'text-right' : 'text-left' }}">
+                    {{ $msg->created_at->format('d M Y H:i') }}
+                </span>
             </div>
+        </div>
+
+    @empty
+        <div class="text-center text-gray-500 py-10">
+            <i class="fas fa-comments text-4xl mb-4 text-gray-300"></i>
+            <p>Belum ada percakapan. Mulai bimbingan dengan mengirim pesan!</p>
+        </div>
+    @endforelse
+
+</div>
 
             {{-- FORM --}}
             <form action="{{ route('siswa.bimbingan.store') }}"

@@ -6,6 +6,7 @@
 <table class="w-full bg-white rounded-lg shadow-lg overflow-hidden">
     <thead class="bg-gradient-to-r from-gray-800 to-gray-700 text-white">
         <tr>
+                        <th class="p-4 text-left font-semibold uppercase tracking-wide">Nomor</th>
             <th class="p-4 text-left font-semibold uppercase tracking-wide">Nama</th>
             <th class="p-4 text-left font-semibold uppercase tracking-wide">NIS</th>
             <th class="p-4 text-left font-semibold uppercase tracking-wide">Pembimbing</th>
@@ -16,10 +17,14 @@
     <tbody>
         @forelse ($siswa as $item)
             <tr class="border-b border-gray-200 hover:bg-indigo-50 transition duration-300 even:bg-gray-50">
+
+                <td class="px-6 py-4 text-center text-gray-600 font-medium">
+        {{ $loop->iteration }}
+        </td>
                 <td class="p-4 text-gray-800">{{ $item->nama }}</td>
                 <td class="p-4 text-gray-800">{{ $item->nis }}</td>
                 <td class="p-4 text-gray-800">
-                    {{ $item->pembimbingUser->nama ?? '-' }}
+                    {{ $item->pembimbing->nama ?? '-' }}
                 </td>
                 <td class="p-4 text-gray-800">
                     {{ $item->tempatPkl->nama_tempat ?? '-' }}

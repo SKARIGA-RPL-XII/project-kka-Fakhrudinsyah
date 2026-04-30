@@ -19,6 +19,7 @@ use App\Http\Controllers\Pembimbing\BimbinganController as PembimbingBimbinganCo
 | REDIRECT DEFAULT
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -40,7 +41,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->prefix('siswa')->name('siswa.')->group(function () {
 
     // Dashboard Siswa
-    Route::get('/dashboard', fn () => view('siswa.dashboard'))
+    Route::get('/dashboard', fn() => view('siswa.dashboard'))
         ->name('dashboard');
 
     // =======================
@@ -68,20 +69,20 @@ Route::middleware(['auth'])->prefix('siswa')->name('siswa.')->group(function () 
     Route::put('/jurnal/{id}', [JurnalController::class, 'update'])
         ->name('jurnal.update');
 
-// LAPORAN SISWA
+    // LAPORAN SISWA
 
-Route::get('/laporan', [LaporanController::class, 'index'])
-    ->name('laporan.index');
+    Route::get('/laporan', [LaporanController::class, 'index'])
+        ->name('laporan.index');
 
-Route::post('/laporan', [LaporanController::class, 'store'])
-    ->name('laporan.store');
+    Route::post('/laporan', [LaporanController::class, 'store'])
+        ->name('laporan.store');
 
-// Akun Siswa
+    // Akun Siswa
 
     Route::get('/akun', [AkunSiswaController::class, 'index'])
-    ->name('akun.index');
+        ->name('akun.index');
 
-// Bimbingan dengan Pembimbing
+    // Bimbingan dengan Pembimbing
 
     Route::get('/bimbingan', [BimbinganController::class, 'index'])
         ->name('bimbingan.index');
@@ -89,6 +90,15 @@ Route::post('/laporan', [LaporanController::class, 'store'])
     Route::post('/bimbingan', [BimbinganController::class, 'store'])
         ->name('bimbingan.store');
 });
+
+//EXPORTTTTTT IMPORTTTTTTTTTTTTTTT
+Route::get('/admin/export-template-user', [UserManagementController::class, 'exportTemplate'])
+    ->name('admin.user.export');
+
+Route::post('/admin/import-user', [UserManagementController::class, 'import'])
+    ->name('admin.user.import');
+
+
 
 
 
@@ -110,16 +120,17 @@ Route::middleware(['auth'])->prefix('pembimbing')->name('pembimbing.')->group(fu
     Route::get('/bimbingan', [PembimbingBimbinganController::class, 'index'])
         ->name('bimbingan.index');
 
-    Route::post('/bimbingan/{siswa}',
-    [\App\Http\Controllers\Pembimbing\BimbinganController::class, 'store']
-)->name('bimbingan.store');
+    Route::post(
+        '/bimbingan/{siswa}',
+        [\App\Http\Controllers\Pembimbing\BimbinganController::class, 'store']
+    )->name('bimbingan.store');
 
     // Jurnal
     Route::get('/jurnal', [App\Http\Controllers\Pembimbing\JurnalController::class, 'index'])
-            ->name('jurnal.index');
+        ->name('jurnal.index');
 
-        Route::post('/jurnal/{id}/update', [App\Http\Controllers\Pembimbing\JurnalController::class, 'update'])
-            ->name('jurnal.update');
+    Route::post('/jurnal/{id}/update', [App\Http\Controllers\Pembimbing\JurnalController::class, 'update'])
+        ->name('jurnal.update');
 });
 
 /*
@@ -170,9 +181,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     | MANAJEMEN USER
     |----------------------------------------------------------------------
     */
+    Route::get('/manajemen-user/search', [UserManagementController::class, 'search'])
+        ->name('manajemen_user.search');
     Route::resource('manajemen-user', UserManagementController::class)
         ->names('manajemen_user');
-
     /*
     |----------------------------------------------------------------------
     | TEMPAT PKL

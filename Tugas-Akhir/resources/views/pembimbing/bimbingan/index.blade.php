@@ -44,23 +44,31 @@
             @endif
         </div>
 
-        {{-- CHAT --}}
+        {{-- CHAT BOX --}}
         <div id="chatBox" class="flex-1 p-4 overflow-y-auto space-y-4 bg-gray-50">
 
             @forelse($messages as $msg)
 
-                {{-- PESAN PEMBIMBING (KANAN) --}}
-                @if(!is_null($msg->pembimbing_id))
+                @php
+                    // Pesan dari pembimbing jika pembimbing_id terisi DAN siswa_id bukan pengirim
+                    // Gunakan kolom 'pengirim' jika ada, fallback ke cek pembimbing_id
+                    $dariPembimbing = isset($msg->pengirim)
+                        ? $msg->pengirim === 'pembimbing'
+                        : (!is_null($msg->pembimbing_id) && $msg->pembimbing_id == auth()->id());
+                @endphp
+
+                @if($dariPembimbing)
+                    {{-- PESAN PEMBIMBING → KANAN --}}
                     <div class="flex justify-end">
-                        <div class="max-w-md px-4 py-2 rounded-lg bg-blue-500 text-white">
+                        <div class="max-w-md px-4 py-2 rounded-2xl rounded-tr-sm bg-blue-500 text-white shadow-sm">
                             @if($msg->pesan)
                                 <p class="text-sm">{{ $msg->pesan }}</p>
                             @endif
 
                             @if($msg->file)
-                                <a href="{{ asset('storage/'.$msg->file) }}"
+                                <a href="{{ asset('storage/' . $msg->file) }}"
                                    target="_blank"
-                                   class="block mt-2 underline text-sm text-white">
+                                   class="block mt-2 underline text-xs text-blue-100">
                                     📎 Lihat File
                                 </a>
                             @endif
@@ -71,23 +79,23 @@
                         </div>
                     </div>
 
-                {{-- PESAN SISWA (KIRI) --}}
                 @else
+                    {{-- PESAN SISWA → KIRI --}}
                     <div class="flex justify-start">
-                        <div class="max-w-md px-4 py-2 rounded-lg bg-white border">
+                        <div class="max-w-md px-4 py-2 rounded-2xl rounded-tl-sm bg-white border shadow-sm">
                             @if($msg->pesan)
-                                <p class="text-sm">{{ $msg->pesan }}</p>
+                                <p class="text-sm text-gray-800">{{ $msg->pesan }}</p>
                             @endif
 
                             @if($msg->file)
-                                <a href="{{ asset('storage/'.$msg->file) }}"
+                                <a href="{{ asset('storage/' . $msg->file) }}"
                                    target="_blank"
-                                   class="block mt-2 underline text-sm">
+                                   class="block mt-2 underline text-xs text-gray-500">
                                     📎 Lihat File
                                 </a>
                             @endif
 
-                            <span class="block text-xs mt-1 opacity-70">
+                            <span class="block text-xs mt-1 opacity-50 text-left">
                                 {{ $msg->created_at->format('H:i') }}
                             </span>
                         </div>
@@ -95,14 +103,14 @@
                 @endif
 
             @empty
-                <p class="text-center text-gray-400 mt-10">
-                    Belum ada pesan
-                </p>
+                <div class="flex items-center justify-center h-full">
+                    <p class="text-gray-400 text-sm">Belum ada pesan. Mulai percakapan!</p>
+                </div>
             @endforelse
 
         </div>
 
-        {{-- FORM BALASAN --}}
+        {{-- FORM KIRIM PESAN --}}
         @if($siswaAktif)
             <form action="{{ route('pembimbing.bimbingan.store', $siswaAktif->user_id) }}"
                   method="POST"
@@ -113,11 +121,16 @@
                 <input type="text"
                        name="pesan"
                        placeholder="Ketik balasan..."
-                       class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring">
+                       autocomplete="off"
+                       class="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
 
-                <input type="file" name="file" class="text-sm">
+                <label class="cursor-pointer text-gray-400 hover:text-blue-500 text-xl" title="Lampirkan file">
+                    📎
+                    <input type="file" name="file" class="hidden">
+                </label>
 
-                <button class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
+                <button type="submit"
+                        class="bg-blue-600 text-white px-5 py-2 rounded-full text-sm hover:bg-blue-700 transition">
                     Kirim
                 </button>
             </form>
@@ -126,7 +139,7 @@
     </div>
 </div>
 
-{{-- AUTO SCROLL --}}
+{{-- AUTO SCROLL KE BAWAH --}}
 <script>
     const chatBox = document.getElementById('chatBox');
     if (chatBox) {

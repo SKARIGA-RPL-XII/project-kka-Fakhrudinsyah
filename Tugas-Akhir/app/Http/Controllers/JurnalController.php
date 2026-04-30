@@ -26,7 +26,6 @@ class JurnalController extends Controller
     /**
      * =========================
      * SIMPAN JURNAL (MAX 1 / HARI)
-     * STATUS AUTO: MENUNGGU
      * =========================
      */
     public function store(Request $request)
@@ -36,11 +35,11 @@ class JurnalController extends Controller
             'kegiatan' => 'required|string',
         ]);
 
-        $hariIni = Carbon::today()->toDateString();
+        $sekarang = Carbon::now(); // ✅ ini sudah ada tanggal + jam
 
-        // CEK SUDAH ISI JURNAL HARI INI ATAU BELUM
+        // CEK SUDAH ISI HARI INI ATAU BELUM
         $sudahIsi = Jurnal::where('siswa_id', Auth::id())
-            ->whereDate('tanggal', $hariIni)
+            ->whereDate('tanggal', Carbon::today())
             ->exists();
 
         if ($sudahIsi) {
@@ -49,13 +48,13 @@ class JurnalController extends Controller
                 ->with('error', 'Anda sudah mengisi jurnal hari ini.');
         }
 
-        // SIMPAN JURNAL
+        // SIMPAN (DATETIME)
         Jurnal::create([
             'siswa_id' => Auth::id(),
-            'tanggal'  => $hariIni,
+            'tanggal'  => $sekarang, // ✅ sekarang ada JAM
             'judul'    => $request->judul,
             'kegiatan' => $request->kegiatan,
-            'status'   => 'menunggu', // AUTO
+            'status'   => 'menunggu',
         ]);
 
         return redirect()
@@ -81,7 +80,6 @@ class JurnalController extends Controller
     /**
      * =========================
      * HALAMAN EDIT JURNAL
-     * (HANYA JIKA STATUS MENUNGGU)
      * =========================
      */
     public function edit($id)
